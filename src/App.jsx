@@ -15,12 +15,14 @@ import Login from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Admindashboard from "./components/Admindashboard/Admindashboard";
 import NotFound from "./components/NotFound/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 
 
 
 function App() {
   return (
     <HashRouter>
+      <ScrollToTop/>
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

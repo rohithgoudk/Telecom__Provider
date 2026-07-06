@@ -90,11 +90,11 @@ function Header() {
             </a>
 
             <a
-              href="/get-started"
+              href="/login"
               className="nav-cta liquid-glass-strong"
               onClick={(e) => {
                 e.preventDefault();
-                handleNavigate('/get-started');
+                handleNavigate('/login');
               }}
             >
               <span className="nav-cta-text">Get started</span>

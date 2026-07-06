@@ -2,14 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Home, AlertCircle, Zap, Globe, Wifi } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './NotFound.css';
+import NF1 from "../../assets/NF1.webp";
+import NF2 from "../../assets/NF2.webp";
+import NF3 from "../../assets/NF3.webp";
+import NF4 from "../../assets/NF4.webp";
+import NF5 from "../../assets/NF5.webp";
 
 // High-quality space/cosmic images for the background
 const BACKGROUND_IMAGES = [
-  'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1600&q=80',
-  'https://images.unsplash.com/photo-1506703719100-a0f3a48a0?w=1600&q=80',
-  'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1600&q=80',
-  'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1600&q=80',
-  'https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=1600&q=80',
+  NF1,
+  NF2,
+  NF3,
+  NF4,
+  NF5,
 ];
 
 function NotFound() {
@@ -50,6 +55,7 @@ function NotFound() {
             canvases.push(canvas);
           }
         } catch (error) {
+          console.warn('Failed to load image:', src, error);
           // Fallback canvas with gradient
           const canvas = document.createElement('canvas');
           canvas.width = 1400;
