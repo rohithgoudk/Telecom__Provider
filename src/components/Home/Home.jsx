@@ -633,6 +633,7 @@ function Home() {
             <div className="background-overlay" />
             <div className="background-radial" />
             <div className="background-grid" />
+            <div className="hero-bottom-scrim" />
           </div>
         </div>
 
@@ -689,24 +690,6 @@ function Home() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Mobile Stats */}
-        <div className={`mobile-stats ${mounted ? 'mounted' : ''}`}>
-          <span className="mobile-stat">
-            <Wifi size={12} /> 99.99%
-          </span>
-          <span className="mobile-stat">
-            <Globe size={12} /> 25+
-          </span>
-          <span className="mobile-stat">
-            <Zap size={12} /> 10Gbps
-          </span>
-        </div>
-
-        <div className={`hero-scroll-cue ${mounted ? 'mounted' : ''}`}>
-          <span className="hero-scroll-line" />
-          scroll
         </div>
       </section>
 

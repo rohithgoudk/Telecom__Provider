@@ -192,6 +192,35 @@ body {
   pointer-events: none;
 }
 
+/*
+  Dedicated scrim for the mobile stats row + button row.
+  On narrow screens the boomerang background photos carry their own
+  busy detail (graph lines, numbers, labels) right behind the mobile
+  stats and buttons, which reads as garbled/overlapping text. This
+  scrim sits above the image layer but below the real UI (z-index 15,
+  UI is z-index 20) and fully mattes out that lower band so only the
+  actual stats/buttons are legible there. It's a no-op on desktop,
+  where the stats sit further from the bottom edge.
+*/
+.hero-bottom-scrim {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 0;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.55) 35%,
+    rgba(0, 0, 0, 0.88) 65%,
+    rgba(0, 0, 0, 0.96) 100%);
+}
+
+@media (max-width: 767px) {
+  .hero-bottom-scrim {
+    height: 170px;
+  }
+}
+
 /* Hero Content — absolute WITHIN hero-section, so it scrolls away with it */
 .hero-content {
   position: absolute;
@@ -434,71 +463,16 @@ body {
   }
 }
 
-/* Mobile Stats — absolute within hero-section */
-.mobile-stats {
-  position: absolute;
-  bottom: 5rem;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  z-index: 20;
-  transition: all 1000ms cubic-bezier(0.4, 0, 0.2, 1) 400ms;
-  opacity: 0;
-}
-
-.mobile-stats.mounted {
-  opacity: 1;
-}
-
-@media (min-width: 768px) {
-  .mobile-stats {
-    display: none;
+/*
+  mobile-stats and hero-scroll-cue elements have been removed from the
+  mobile hero markup — they used to sit directly above the buttons and
+  clashed with the busy background image there. bottom-section now sits
+  a bit lower on mobile since nothing needs to sit below it anymore.
+*/
+@media (max-width: 767px) {
+  .bottom-section {
+    bottom: 2.5rem;
   }
-}
-
-.mobile-stat {
-  font-size: 0.625rem;
-  color: rgba(255, 255, 255, 0.4);
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-/* Scroll cue at the base of the hero */
-.hero-scroll-cue {
-  position: absolute;
-  bottom: 1.25rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  opacity: 0;
-  transition: opacity 1000ms ease 600ms;
-}
-.hero-scroll-cue.mounted { opacity: 1; }
-.hero-scroll-line {
-  width: 1px;
-  height: 28px;
-  background: linear-gradient(to bottom, rgba(96,165,250,0.9), transparent);
-  animation: scroll-cue-travel 1.8s ease-in-out infinite;
-  transform-origin: top;
-}
-@keyframes scroll-cue-travel {
-  0% { transform: scaleY(0.3); opacity: 0.4; }
-  50% { transform: scaleY(1); opacity: 1; }
-  100% { transform: scaleY(0.3); opacity: 0.4; }
-}
-@media (min-width: 768px) {
-  .hero-scroll-cue { display: none; }
 }
 
 /* Logo SVG */
