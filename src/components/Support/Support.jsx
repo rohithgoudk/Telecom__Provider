@@ -16,20 +16,20 @@ const CHANNELS = [
 ];
 
 const RESOURCES = [
-  { 
-    title: 'Setting up your mesh router', 
-    duration: '3:12', 
-    image: Tel1 
+  {
+    title: 'Setting up your mesh router',
+    duration: '3:12',
+    image: Tel1
   },
-  { 
-    title: 'Reading your usage dashboard', 
-    duration: '2:04', 
-    image: Tel2 
+  {
+    title: 'Reading your usage dashboard',
+    duration: '2:04',
+    image: Tel2
   },
-  { 
-    title: 'Troubleshooting a slow connection', 
-    duration: '4:47', 
-    image: Tel3 
+  {
+    title: 'Troubleshooting a slow connection',
+    duration: '4:47',
+    image: Tel3
   },
 ];
 
@@ -137,7 +137,12 @@ function Support() {
             <div className="resource-card" key={i}>
               <div className="resource-thumb">
                 <DuoImage src={r.image} alt={r.title} className="resource-image" />
-                <span className="resource-play" aria-hidden="true" />
+                <button
+                  type="button"
+                  className="resource-play"
+                  aria-label={`Play: ${r.title}`}
+                  onClick={() => navigate('/404')}
+                />
                 <span className="resource-duration">{r.duration}</span>
               </div>
               <h3 className="resource-title">{r.title}</h3>

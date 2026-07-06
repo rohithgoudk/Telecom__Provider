@@ -127,10 +127,12 @@ function CoverageSection() {
 // Interlude: full-bleed image break
 // =====================================================================
 function SignalInterlude() {
-  const [ref, inView] = useReveal();
+  const [ref, inView] = useReveal(0.1);
   return (
     <section ref={ref} className={`interlude ${inView ? 'in-view' : ''}`}>
-      <DuoImage src={IMAGE_SOURCES[4]} className="interlude-image" />
+      <div className="interlude-media">
+        <DuoImage src={IMAGE_SOURCES[4]} className="interlude-image" />
+      </div>
       <div className="interlude-content">
         <span className="eyebrow"><Zap size={12} /> Infrastructure</span>
         <h2 className="interlude-title">
@@ -200,7 +202,7 @@ const SOLUTIONS = [
 function SolutionsSection() {
   const navigate = useNavigate();
   const [ref, inView] = useReveal();
-  
+
   const handleGetPlan = (e, planName) => {
     e.preventDefault();
     navigate('/404');
@@ -228,7 +230,7 @@ function SolutionsSection() {
                     ))}
                   </ul>
                   {sol.featured ? (
-                    <button 
+                    <button
                       onClick={(e) => handleGetPlan(e, sol.name)}
                       className="btn-primary"
                     >
@@ -238,7 +240,7 @@ function SolutionsSection() {
                       <span className="btn-primary-overlay" />
                     </button>
                   ) : (
-                    <button 
+                    <button
                       onClick={(e) => handleGetPlan(e, sol.name)}
                       className="btn-secondary liquid-glass"
                     >
