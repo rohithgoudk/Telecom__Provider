@@ -648,10 +648,7 @@ export default function Dashboard() {
   }, [activeNav]);
 
   // Hard-lock the background from scrolling/dragging (including
-  // horizontally) while the mobile sidebar drawer is open. This is
-  // what stops the whole page from shifting sideways when the user
-  // scrolls with the drawer open — previously nothing prevented the
-  // page underneath from moving while the drawer animated.
+  // horizontally) while the mobile sidebar drawer is open.
   useEffect(() => {
     if (!sidebarOpen) {
       const y = scrollLockYRef.current;
@@ -711,10 +708,13 @@ export default function Dashboard() {
               <span>{item.label}</span>
             </button>
           ))}
+          {/* Logout — moved out of the pinned-to-bottom slot and placed
+              right after Settings, in the normal nav flow. */}
+          <button className="nav-item logout-full-btn" onClick={() => navigate("/login")}>
+            <span className="nav-icon">↪</span>
+            <span>Logout</span>
+          </button>
         </nav>
-        <button className="logout-full-btn" style={{ marginTop: "auto" }} onClick={() => navigate("/login")}>
-          <span>↪</span> Logout
-        </button>
       </aside>
 
       <main className="main-content" ref={mainRef}>

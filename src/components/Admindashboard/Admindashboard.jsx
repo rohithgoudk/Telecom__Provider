@@ -812,10 +812,13 @@ export default function AdminDashboard() {
               {item.id === "approvals" && <span className="adm-nav-badge">{adminStats.pendingApprovals}</span>}
             </button>
           ))}
+          {/* Logout — moved out of the pinned-to-bottom slot and placed
+              right after Settings, in the normal nav flow. */}
+          <button className="adm-nav-item adm-logout-full-btn" onClick={() => navigate("/login")}>
+            <span className="adm-nav-icon">↪</span>
+            <span>Logout</span>
+          </button>
         </nav>
-        <button className="adm-logout-full-btn" style={{ marginTop: "auto" }} onClick={() => navigate("/login")}>
-          <span>↪</span> Logout
-        </button>
       </aside>
 
       <main className="adm-main-content" ref={mainRef}>
