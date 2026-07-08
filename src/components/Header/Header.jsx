@@ -154,11 +154,27 @@ export default function Header() {
               {label}
             </button>
           ))}
+
+          {/* Login — mirrors the desktop member-login icon button,
+              now reachable from the mobile drawer too. */}
+          <button
+            className="hdr-drawer-link hdr-drawer-link--login"
+            style={{ transitionDelay: menuOpen ? `${NAV_LINKS.length * 0.06}s` : "0s" }}
+            onClick={() => handleNavigate("/login", "Login")}
+          >
+            <span className="hdr-drawer-num">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              </svg>
+            </span>
+            Login
+          </button>
         </nav>
         <div className="hdr-drawer-footer">
           <button 
             className="hdr-cta hdr-cta--full" 
-            onClick={() => handleNavigate("/login", "Login")}
+            onClick={() => handleNavigate("/register", "Signup")}
           >
             Begin Expedition
           </button>
