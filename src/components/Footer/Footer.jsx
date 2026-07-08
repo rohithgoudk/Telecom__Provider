@@ -47,7 +47,9 @@ function IconYoutube({ size = 16, ...props }) {
   );
 }
 
-// Same set as the header nav, kept in sync so Quick Links always matches
+// Same set as the header nav, kept in sync so Quick Links always matches.
+// Note: `path` is kept only for display/reference — every link is wired
+// to redirect to /404 on click (see handleNavigate('/404') below).
 const QUICK_LINKS = [
   { label: 'Solutions', path: '/solutions' },
   { label: 'Network', path: '/network' },
@@ -123,18 +125,19 @@ function Footer() {
             </div>
           </div>
 
-          {/* Quick links — mirrors the header nav */}
+          {/* Quick links — mirrors the header nav, but every link
+              now routes to the 404 page. */}
           <div className="footer-column">
             <h3 className="footer-heading">Quick links</h3>
             <ul className="footer-links">
               {QUICK_LINKS.map((link) => (
                 <li key={link.label}>
                   <a
-                    href={link.path}
+                    href="/404"
                     className="footer-link"
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavigate(link.path);
+                      handleNavigate('/404');
                     }}
                   >
                     {link.label}

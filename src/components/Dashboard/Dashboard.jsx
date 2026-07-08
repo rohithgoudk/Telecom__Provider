@@ -637,6 +637,7 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("dashboard");
   const mainRef = useRef(null);
+  const scrollLockYRef = useRef(0);
 
   const currentPage = pageMap[activeNav];
   const PageComponent = currentPage.component;
@@ -645,6 +646,42 @@ export default function Dashboard() {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     if (mainRef.current) mainRef.current.scrollTop = 0;
   }, [activeNav]);
+
+  // Hard-lock the background from scrolling/dragging (including
+  // horizontally) while the mobile sidebar drawer is open. This is
+  // what stops the whole page from shifting sideways when the user
+  // scrolls with the drawer open — previously nothing prevented the
+  // page underneath from moving while the drawer animated.
+  useEffect(() => {
+    if (!sidebarOpen) {
+      const y = scrollLockYRef.current;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      if (y) window.scrollTo(0, y);
+      return;
+    }
+
+    scrollLockYRef.current = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollLockYRef.current}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    const preventMove = (e) => e.preventDefault();
+    window.addEventListener("touchmove", preventMove, { passive: false });
+
+    return () => {
+      window.removeEventListener("touchmove", preventMove);
+    };
+  }, [sidebarOpen]);
 
   return (
     <div className="dashboard-root">

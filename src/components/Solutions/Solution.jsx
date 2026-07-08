@@ -173,13 +173,8 @@ function Solution() {
         </div>
       </section>
 
-      {/* Section 4: CTA with image backdrop */}
+      {/* Section 4: CTA — background image removed, box centered */}
       <section className="solutions-cta-section">
-        <DuoImage
-          src={Tel3}
-          alt=""
-          className="solutions-cta-image"
-        />
         <div className="solutions-cta-inner liquid-glass-strong">
           <h2 className="solutions-cta-title">Not sure which one fits?</h2>
           <p className="solutions-cta-body">Tell us how you use the internet — we'll tell you which plan to skip.</p>

@@ -4,7 +4,17 @@
    (see Home.css). Falls back to system fonts if not present.
    ============================================================ */
 
-   .dashboard-root {
+/* Global safety net: nothing in this page should ever be able to
+   scroll horizontally. This is what was missing before — the
+   off-canvas sidebar (using `left: -270px`) could inflate the
+   document's scrollable width on some mobile browsers, letting the
+   whole page drag sideways. */
+   html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  
+  .dashboard-root {
     --bg: #030304;
     --surface: rgba(255, 255, 255, 0.025);
     --surface-2: rgba(255, 255, 255, 0.05);
@@ -19,9 +29,17 @@
   
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
     background: var(--bg);
     color: var(--text-primary);
     font-family: 'Barlow', sans-serif;
+    /* Let vertical scroll/swipe pass through normally, but don't let
+       horizontal swipe gestures (e.g. browser back-swipe) drag the
+       whole layout sideways. */
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
   }
   
   .dashboard-root * { box-sizing: border-box; }
@@ -47,6 +65,7 @@
     top: 0;
     height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
   }
   
   .sidebar-header {
@@ -159,16 +178,18 @@
   .main-content {
     flex: 1;
     min-width: 0;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
   }
   
   .topbar {
     position: sticky;
     top: 0;
-    z-index: 5;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -181,7 +202,7 @@
     flex-wrap: wrap;
   }
   
-  .topbar-left { display: flex; align-items: center; gap: 1rem; }
+  .topbar-left { display: flex; align-items: center; gap: 1rem; min-width: 0; }
   
   .hamburger {
     display: none;
@@ -191,9 +212,12 @@
     border: none;
     cursor: pointer;
     padding: 0.4rem;
+    flex-shrink: 0;
   }
   
   .hamburger span { width: 18px; height: 2px; background: #fff; border-radius: 2px; }
+  
+  .page-title { min-width: 0; }
   
   .page-title h1 {
     font-family: 'Instrument Serif', serif;
@@ -210,7 +234,7 @@
     margin-top: 0.15rem;
   }
   
-  .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+  .topbar-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
   
   .search-box {
     display: flex;
@@ -220,6 +244,7 @@
     border: 1px solid var(--border);
     border-radius: 9999px;
     padding: 0.5rem 0.9rem;
+    min-width: 0;
   }
   
   .search-box input {
@@ -230,6 +255,8 @@
     font-size: 0.82rem;
     font-family: inherit;
     width: 200px;
+    max-width: 100%;
+    min-width: 0;
   }
   
   .search-box input::placeholder { color: var(--text-tertiary); }
@@ -248,6 +275,7 @@
     cursor: pointer;
     font-size: 0.95rem;
     transition: border-color 0.2s ease;
+    flex-shrink: 0;
   }
   
   .icon-btn:hover { border-color: rgba(96, 165, 250, 0.4); }
@@ -268,12 +296,15 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   /* ============ Stats grid ============ */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1rem;
   }
   
@@ -282,6 +313,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1.25rem;
+    min-width: 0;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
   
@@ -344,12 +376,14 @@
     display: grid;
     grid-template-columns: 1.6fr 1fr;
     gap: 1rem;
+    min-width: 0;
   }
   
   .bottom-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
+    min-width: 0;
   }
   
   @media (max-width: 1100px) {
@@ -358,11 +392,11 @@
   }
   
   @media (max-width: 900px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   
   @media (max-width: 560px) {
-    .stats-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: minmax(0, 1fr); }
   }
   
   /* ============ Card ============ */
@@ -371,6 +405,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1.5rem;
+    min-width: 0;
   }
   
   .card-header {
@@ -396,8 +431,14 @@
     margin-top: 0.2rem;
   }
   
-  /* ============ Data table ============ */
-  .table-wrapper { overflow-x: auto; }
+  /* ============ Data table ============
+     Tables are the one place allowed to scroll horizontally — and
+     only within their own wrapper, never the page. */
+  .table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
   
   .data-table {
     width: 100%;
@@ -664,12 +705,12 @@
   /* ============ Team grid (Teams page) ============ */
   .team-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
   
-  @media (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 600px) { .team-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .team-grid { grid-template-columns: minmax(0, 1fr); } }
   
   .team-grid .team-card {
     background: var(--surface);
@@ -677,6 +718,7 @@
     border-radius: var(--radius);
     padding: 1.25rem;
     cursor: pointer;
+    min-width: 0;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
   
@@ -687,6 +729,7 @@
     border-radius: var(--radius-sm);
     padding: 1.1rem 1.25rem;
     cursor: pointer;
+    min-width: 0;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
   
@@ -699,6 +742,7 @@
     border-radius: var(--radius-sm);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
+    min-width: 0;
     transition: background 0.15s ease, transform 0.15s ease;
   }
   
@@ -713,12 +757,12 @@
   /* ============ Publication / documentation grid ============ */
   .pub-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
   
-  @media (max-width: 900px) { .pub-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 600px) { .pub-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .pub-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .pub-grid { grid-template-columns: minmax(0, 1fr); } }
   
   .pub-card {
     background: var(--surface);
@@ -726,34 +770,44 @@
     border-radius: var(--radius);
     padding: 1.25rem;
     cursor: pointer;
+    min-width: 0;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
   
   /* ============ Search box inside cards ============ */
-  .card-header .search-box { min-width: 220px; }
+  .card-header .search-box { min-width: 0; max-width: 100%; }
   
   /* ============ Settings ============ */
   .account-row img { object-fit: cover; }
   
-  /* ============ Responsive sidebar (mobile) ============ */
+  /* ============ Responsive sidebar (mobile) ============
+     Switched from `left: -270px / left: 0` to a `transform`-based
+     slide. Transform never affects layout or scrollable width, so it
+     can't inflate the page and cause horizontal drag — the previous
+     left-position technique could. `will-change` keeps the animation
+     smooth on mobile GPUs. */
   @media (max-width: 960px) {
     .sidebar {
       position: fixed;
-      left: -270px;
+      left: 0;
       top: 0;
-      z-index: 40;
-      transition: left 0.25s ease;
+      z-index: 45;
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+      will-change: transform;
       box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
     }
   
-    .sidebar.sidebar-open { left: 0; }
+    .sidebar.sidebar-open {
+      transform: translateX(0);
+    }
   
     .sidebar-overlay {
       display: block;
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.55);
-      z-index: 35;
+      z-index: 40;
     }
   
     .close-btn { display: flex; }
@@ -767,4 +821,8 @@
     .content-area { padding: 1.25rem 1.25rem 2.5rem; }
     .search-box input { width: 90px; }
     .card { padding: 1.1rem; }
+  }
+  
+  @media (max-width: 400px) {
+    .search-box { display: none; }
   }

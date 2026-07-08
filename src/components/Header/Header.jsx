@@ -1,148 +1,175 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Menu, X, Image as ImageIcon } from 'lucide-react';
-import './Header.css';
-import logo from '../../assets/logo.webp';
+// Header.jsx
+import { useEffect, useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./Header.css";
+import logo from "../../assets/Logo.webp";
 
 const NAV_LINKS = [
-  { label: 'Home' , path: '/' },
-  { label: 'Solutions', path: '/solution' },
-  { label: 'Network', path: '/network' },
-  { label: 'Support', path: '/support' },
-  { label: 'Company', path: '/company' },
+  { label: "Home", path: "/" },
+  { label: "Solution",   path: "/Solution"   },
+  { label: "Network",    path: "/network"    },
+  { label: "Support", path: "/support" },
+  { label: "Company",     path: "/company"     },
+  
 ];
 
-function LogoMark({ onNavigate }) {
-  const [failed, setFailed] = useState(false);
-
-  return (
-    <a
-      href="/"
-      className="logo-link"
-      onClick={(e) => {
-        e.preventDefault();
-        onNavigate('/');
-      }}
-    >
-      <span className="logo-image-slot">
-        {!failed ? (
-          <img
-            src={logo}
-            alt="Company logo"
-            className="logo-image"
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <span className="logo-placeholder" aria-hidden="true">
-            <ImageIcon size={16} />
-          </span>
-        )}
-      </span>
-    </a>
-  );
-}
-
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+export default function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [scrolled,    setScrolled]    = useState(false);
+  const [menuOpen,    setMenuOpen]    = useState(false);
+  const [searchOpen,  setSearchOpen]  = useState(false);
+  const searchRef = useRef(null);
 
-  const handleNavigate = (path) => {
-    setMenuOpen(false);
+  // Get current active link based on path
+  const getActiveLink = () => {
+    const currentPath = location.pathname;
+    const matched = NAV_LINKS.find(link => link.path === currentPath);
+    return matched ? matched.label : "Expeditions";
+  };
+
+  const [activeLink, setActiveLink] = useState(getActiveLink());
+
+  // Update active link when location changes
+  useEffect(() => {
+    setActiveLink(getActiveLink());
+  }, [location.pathname]);
+
+  // Scroll detection
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close search on outside click
+  useEffect(() => {
+    if (!searchOpen) return;
+    const handler = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [searchOpen]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  // Handle navigation
+  const handleNavigate = (path, label) => {
     navigate(path);
+    setActiveLink(label);
+    setMenuOpen(false);
   };
 
   return (
-    <header className="site-header">
-      <nav className="nav-container">
-        <div className="nav-inner liquid-glass">
-          {/* Logo pinned to the far left */}
-          <div className="nav-left">
-            <LogoMark onNavigate={handleNavigate} />
+    <>
+      <header className={`hdr${scrolled ? " hdr--scrolled" : ""}${menuOpen ? " hdr--menu-open" : ""}`}>
+        <div className="hdr-inner">
+
+          {/* ── LOGO ── */}
+          <div 
+            className="hdr-logo" 
+            onClick={() => handleNavigate("/", "Home")}
+            style={{ cursor: "pointer" }}
+            aria-label="Strata home"
+          >
+            <img
+              src={logo}
+              alt="Strata logo"
+              className="hdr-logo-img"
+            />
           </div>
 
-          {/* Links, sign in, CTA, and mobile toggle grouped at the far right */}
-          <div className="nav-right">
-            <div className="nav-links">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.path}
-                  className="nav-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavigate(link.path);
-                  }}
-                >
-                  {link.label}
-                </a>
+          {/* ── DESKTOP NAV ── */}
+          <nav className="hdr-nav" aria-label="Primary navigation">
+            <ul className="hdr-nav-list">
+              {NAV_LINKS.map(({ label, path }) => (
+                <li key={label}>
+                  <button
+                    className={`hdr-nav-link${activeLink === label ? " hdr-nav-link--active" : ""}`}
+                    onClick={() => handleNavigate(path, label)}
+                  >
+                    {label}
+                    <span className="hdr-nav-underline" />
+                  </button>
+                </li>
               ))}
-            </div>
+            </ul>
+          </nav>
 
-            <a
-              href="/signin"
-              className="nav-signin"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigate('/signup');
-              }}
+          {/* ── RIGHT ACTIONS ── */}
+          <div className="hdr-actions">
+            {/* Search toggle */}
+            
+
+            {/* Member login */}
+            <button className="hdr-icon-btn hdr-icon-btn--text" aria-label="Member portal" onClick={()=>navigate("/login")}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              </svg>
+            </button>
+
+            {/* CTA */}
+            <button 
+              className="hdr-cta" 
+              onClick={() => handleNavigate("/register", "Signup")}
+
             >
-              Sign up
-            </a>
+              Begin Expedition
+            </button>
 
-            <a
-              href="/login"
-              className="nav-cta liquid-glass-strong"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigate('/login');
-              }}
-            >
-              <span className="nav-cta-text">Get started</span>
-              <span className="nav-cta-icon">Start</span>
-              <ArrowRight size={14} className="nav-cta-arrow" />
-            </a>
-
+            {/* Hamburger */}
             <button
-              type="button"
-              className="nav-menu-toggle liquid-glass"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className={`hdr-burger${menuOpen ? " hdr-burger--open" : ""}`}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((v) => !v)}
             >
-              {menuOpen ? <X size={16} /> : <Menu size={16} />}
+              <span /><span /><span />
             </button>
           </div>
         </div>
 
-        {/* Mobile dropdown panel */}
-        <div className={`nav-mobile-panel liquid-glass-strong ${menuOpen ? 'open' : ''}`}>
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.path}
-              className="nav-mobile-link"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigate(link.path);
-              }}
+        
+      </header>
+
+      {/* ── MOBILE DRAWER ── */}
+      <div className={`hdr-drawer${menuOpen ? " hdr-drawer--open" : ""}`} aria-hidden={!menuOpen}>
+        <nav className="hdr-drawer-nav">
+          {NAV_LINKS.map(({ label, path }, i) => (
+            <button
+              key={label}
+              className="hdr-drawer-link"
+              style={{ transitionDelay: menuOpen ? `${i * 0.06}s` : "0s" }}
+              onClick={() => handleNavigate(path, label)}
             >
-              {link.label}
-            </a>
+              <span className="hdr-drawer-num">0{i + 1}</span>
+              {label}
+            </button>
           ))}
-          <a
-            href="/login"
-            className="nav-mobile-link nav-mobile-signin"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavigate('/login');
-            }}
+        </nav>
+        <div className="hdr-drawer-footer">
+          <button 
+            className="hdr-cta hdr-cta--full" 
+            onClick={() => handleNavigate("/login", "Login")}
           >
-            Sign in
-          </a>
+            Begin Expedition
+          </button>
+          <p className="hdr-drawer-tagline">Est. 1923 · Field Archaeology</p>
         </div>
-      </nav>
-    </header>
+      </div>
+
+      {/* Backdrop */}
+      {menuOpen && (
+        <div className="hdr-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
+      )}
+    </>
   );
 }
-
-export default Header;

@@ -1,298 +1,383 @@
-/* ============ Site Header ============ */
-.site-header {
-    position: relative;
-    z-index: 50;
+/* ============================================================
+   Header — dark, solid theme (no glass / blur anywhere)
+   Accent color: indigo (#5b6ef5)
+   ============================================================ */
+
+   :root {
+    --hdr-bg: #14161c;
+    --hdr-bg-scrolled: #0d0f14;
+    --hdr-border: #262a33;
+    --hdr-text: rgba(255, 255, 255, 0.75);
+    --hdr-text-strong: #ffffff;
+    --hdr-accent: #5b6ef5;
+    --hdr-accent-hover: #4d5eea;
+    --hdr-drawer-bg: #191c24;
+    --hdr-chip-bg: #1e212a;
+    --hdr-chip-bg-hover: #262a35;
   }
   
-  .nav-container {
+  /* ---------------- Top bar ---------------- */
+  .hdr {
     position: fixed;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    width: 95%;
-    max-width: 95%;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    background: var(--hdr-bg);
+    border-bottom: 1px solid var(--hdr-border);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+    transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
   
-  @media (min-width: 768px) {
-    .nav-container {
-      top: 1.25rem;
-      width: auto;
-      max-width: none;
-    }
+  .hdr--scrolled {
+    background: var(--hdr-bg-scrolled);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
   }
   
-  .nav-inner {
+  .hdr--menu-open {
+    background: var(--hdr-bg-scrolled);
+    border-color: #2f333d;
+  }
+  
+  .hdr-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 64px;
+    padding: 0 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
-    border-radius: 9999px;
-    padding: 0.5rem 0.75rem;
-    white-space: nowrap;
+    gap: 1.5rem;
   }
   
   @media (min-width: 768px) {
-    .nav-inner {
-      gap: 1.5rem;
-      padding: 0.625rem 1rem;
+    .hdr-inner {
+      height: 72px;
+      padding: 0 2rem;
     }
   }
   
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  @media (min-width: 768px) {
-    .nav-left {
-      gap: 1.25rem;
-    }
-  }
-  
-  /* ---- Logo: image placeholder + wordmark ---- */
-  .logo-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: white;
-  }
-  
-  .logo-image-slot {
-    height: 30px;
-    width: auto;
+  /* ---------------- Logo ---------------- */
+  .hdr-logo {
     display: flex;
     align-items: center;
     flex-shrink: 0;
   }
   
-  .logo-image {
-    height: 100%;
+  .hdr-logo-img {
+    height: 28px;
     width: auto;
     object-fit: contain;
     display: block;
   }
   
-  /* Shown automatically whenever the logo fails to load —
-     dashed frame + icon signal "drop your logo here" rather than a broken image. */
-  .logo-placeholder {
-    width: 32px;
-    height: 32px;
+  @media (min-width: 768px) {
+    .hdr-logo-img {
+      height: 32px;
+    }
+  }
+  
+  /* ---------------- Desktop nav ---------------- */
+  .hdr-nav {
+    display: none;
+  }
+  
+  @media (min-width: 900px) {
+    .hdr-nav {
+      display: block;
+      flex: 1;
+      margin: 0 1rem;
+    }
+  }
+  
+  .hdr-nav-list {
+    list-style: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(96, 165, 250, 0.75);
-    border: 1px dashed rgba(96, 165, 250, 0.4);
-    border-radius: 9px;
-    box-sizing: border-box;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
   }
   
-  .nav-links {
+  .hdr-nav-link {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--hdr-text);
+    padding: 0.4rem 0.1rem;
+    transition: color 0.2s ease;
+  }
+  
+  .hdr-nav-link:hover {
+    color: var(--hdr-text-strong);
+  }
+  
+  .hdr-nav-link--active {
+    color: var(--hdr-text-strong);
+  }
+  
+  .hdr-nav-underline {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 100%;
+    background: var(--hdr-accent);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  
+  .hdr-nav-link:hover .hdr-nav-underline {
+    transform: scaleX(1);
+  }
+  
+  .hdr-nav-link--active .hdr-nav-underline {
+    transform: scaleX(1);
+  }
+  
+  /* ---------------- Right actions ---------------- */
+  .hdr-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .hdr-actions {
+      gap: 0.85rem;
+    }
+  }
+  
+  /* Circular icon button (member login) */
+  .hdr-icon-btn {
     display: none;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--hdr-chip-bg);
+    border: 1px solid var(--hdr-border);
+    color: var(--hdr-text-strong);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  
+  .hdr-icon-btn:hover {
+    background: var(--hdr-chip-bg-hover);
+    transform: scale(1.05);
+  }
+  
+  .hdr-icon-btn:active {
+    transform: scale(0.95);
   }
   
   @media (min-width: 640px) {
-    .nav-links {
+    .hdr-icon-btn {
       display: flex;
-      gap: 0.75rem;
     }
   }
   
-  @media (min-width: 768px) {
-    .nav-links {
-      gap: 1.25rem;
-    }
-  }
-  
-  .nav-link {
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  
-  .nav-link:hover {
-    color: white;
-  }
-  
-  @media (min-width: 768px) {
-    .nav-link {
-      font-size: 0.875rem;
-    }
-  }
-  
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  @media (min-width: 768px) {
-    .nav-right {
-      gap: 1.5rem;
-    }
-  }
-  
-  .nav-signin {
-    display: none;
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  
-  .nav-signin:hover {
-    color: white;
-  }
-  
-  @media (min-width: 640px) {
-    .nav-signin {
-      display: inline;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .nav-signin {
-      font-size: 0.875rem;
-    }
-  }
-  
-  .nav-cta {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: white;
-    text-decoration: none;
+  /* CTA */
+  .hdr-cta {
+    background: #ffffff;
+    color: #0a0b0e;
+    border: none;
     border-radius: 9999px;
-    padding: 0.375rem 0.75rem;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: none;
   }
   
-  .nav-cta:hover {
-    transform: scale(1.04);
-    box-shadow: 0 0 16px 2px rgba(255, 255, 255, 0.12);
+  .hdr-cta:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 14px 2px rgba(255, 255, 255, 0.25);
   }
   
-  .nav-cta:active {
+  .hdr-cta:active {
     transform: scale(0.97);
   }
   
-  @media (min-width: 768px) {
-    .nav-cta {
-      font-size: 0.875rem;
-      padding: 0.375rem 1rem;
-    }
-  }
-  
-  .nav-cta-text {
-    display: none;
-  }
-  
   @media (min-width: 640px) {
-    .nav-cta-text {
-      display: inline;
+    .hdr-cta {
+      display: inline-block;
     }
   }
   
-  .nav-cta-icon {
-    display: inline;
+  .hdr-cta--full {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.9rem;
   }
   
-  @media (min-width: 640px) {
-    .nav-cta-icon {
-      display: none;
-    }
-  }
-  
-  .nav-cta-arrow {
-    display: none;
-  }
-  
-  @media (min-width: 640px) {
-    .nav-cta-arrow {
-      display: inline;
-    }
-  }
-  
-  /* ---- Mobile menu toggle (hidden once nav-links show for real) ---- */
-  .nav-menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    color: white;
+  /* ---------------- Hamburger (unchanged markup: 3 spans) ---------------- */
+  .hdr-burger {
+    position: relative;
+    width: 30px;
+    height: 22px;
     background: transparent;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    flex-shrink: 0;
   }
   
-  .nav-menu-toggle:hover {
-    transform: scale(1.06);
-  }
-  
-  .nav-menu-toggle:active {
-    transform: scale(0.94);
-  }
-  
-  @media (min-width: 640px) {
-    .nav-menu-toggle {
+  @media (min-width: 900px) {
+    .hdr-burger {
       display: none;
     }
   }
   
-  /* ---- Mobile dropdown panel ---- */
-  .nav-mobile-panel {
-    margin-top: 0.5rem;
-    border-radius: 20px;
-    padding: 0.5rem;
+  .hdr-burger span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--hdr-text-strong);
+    transition: transform 0.3s ease, opacity 0.25s ease, top 0.3s ease, background 0.2s ease;
+  }
+  
+  .hdr-burger span:nth-child(1) { top: 0; }
+  .hdr-burger span:nth-child(2) { top: 10px; }
+  .hdr-burger span:nth-child(3) { top: 20px; }
+  
+  /* Open state — clear color shift + morph into an X, so on/off is
+     unmistakable even though the markup itself wasn't touched. */
+  .hdr-burger--open span {
+    background: var(--hdr-accent);
+  }
+  
+  .hdr-burger--open span:nth-child(1) {
+    top: 10px;
+    transform: rotate(45deg);
+  }
+  
+  .hdr-burger--open span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .hdr-burger--open span:nth-child(3) {
+    top: 10px;
+    transform: rotate(-45deg);
+  }
+  
+  /* ---------------- Mobile drawer ----------------
+     Solid, fully opaque — no blur/transparency. */
+  .hdr-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 84%;
+    max-width: 360px;
+    background: var(--hdr-drawer-bg);
+    border-left: 1px solid var(--hdr-border);
+    box-shadow: -12px 0 32px rgba(0, 0, 0, 0.45);
+    z-index: 65;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6rem 1.5rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+  }
+  
+  .hdr-drawer--open {
+    transform: translateX(0);
+  }
+  
+  @media (min-width: 900px) {
+    .hdr-drawer {
+      display: none;
+    }
+  }
+  
+  .hdr-drawer-nav {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    max-height: 0;
-    overflow: hidden;
+  }
+  
+  .hdr-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background: none;
+    border: none;
+    text-align: left;
+    color: var(--hdr-text-strong);
+    font-size: 1.4rem;
+    font-weight: 500;
+    padding: 0.85rem 0.25rem;
+    border-radius: 10px;
+    cursor: pointer;
     opacity: 0;
-    transition: max-height 300ms ease, opacity 250ms ease, padding 300ms ease;
+    transform: translateX(16px);
+    transition: opacity 0.35s ease, transform 0.35s ease, background 0.2s ease;
   }
   
-  .nav-mobile-panel.open {
-    max-height: 320px;
+  .hdr-drawer--open .hdr-drawer-link {
     opacity: 1;
-    padding: 0.75rem;
+    transform: translateX(0);
   }
   
-  @media (min-width: 640px) {
-    .nav-mobile-panel {
+  .hdr-drawer-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  
+  .hdr-drawer-num {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--hdr-accent);
+    min-width: 1.6rem;
+  }
+  
+  .hdr-drawer-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  
+  .hdr-drawer-tagline {
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+  
+  /* ---------------- Backdrop ---------------- */
+  .hdr-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 62;
+    background: rgba(0, 0, 0, 0.6);
+    animation: hdr-backdrop-fade 200ms ease forwards;
+  }
+  
+  @keyframes hdr-backdrop-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @media (min-width: 900px) {
+    .hdr-backdrop {
       display: none;
     }
-  }
-  
-  .nav-mobile-link {
-    font-size: 0.9rem;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    padding: 0.6rem 0.75rem;
-    border-radius: 12px;
-    transition: background 0.2s ease, color 0.2s ease;
-  }
-  
-  .nav-mobile-link:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: white;
-  }
-  
-  .nav-mobile-signin {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 0.25rem;
-    padding-top: 0.85rem;
   }
