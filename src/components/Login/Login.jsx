@@ -92,7 +92,8 @@ function Login() {
             {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
 
-          {/* Single field, single toggle, bound only to this input's own state */}
+          {/* Single field, single custom toggle — native browser reveal icons
+              are disabled in CSS so only this eye icon ever shows. */}
           <div className="form-field">
             <input
               id="password"
@@ -110,6 +111,7 @@ function Login() {
               className="eye-toggle"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               onClick={() => setShowPassword((v) => !v)}
+              tabIndex={-1}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
